@@ -71,10 +71,10 @@
 <div class="wrap">
 
   <header>
-    <span class="marca"><span class="rb">RB</span> Painel Clínico APS — Osasco</span>
+    <span class="marca"><span class="rb">R³</span> Painel Clínico APS — Osasco</span>
     <h1>Política de Privacidade</h1>
     <p class="sub">Extensão do Google Chrome de apoio ao médico sobre o prontuário eletrônico SISS de Osasco.</p>
-    <p class="meta">Última atualização: 3 de setembro de 2026 · Versão da extensão: 4.32.1</p>
+    <p class="meta">Última atualização: 11 de outubro de 2026 · Versão da extensão: 4.49.0</p>
   </header>
 
   <h2>1. Quem é o responsável</h2>
@@ -83,7 +83,8 @@
     médico inscrito no CREMESP sob o nº 151783 (Gestão Médica da Atenção Primária),
     doravante "o responsável". Para fins da Lei Geral de Proteção
     de Dados (Lei nº 13.709/2018 — LGPD), o responsável atua como <strong>controlador</strong> apenas
-    dos dados de cadastro dos profissionais que utilizam a ferramenta (ver seção 4). O responsável
+    dos dados de cadastro dos profissionais que utilizam a ferramenta (ver seção 4) e da medição
+    agregada de uso (ver seção 5). O responsável
     <strong>não</strong> é controlador dos dados de pacientes tratados dentro do prontuário SISS
     (ver seção 3).
   </p>
@@ -92,10 +93,11 @@
   <h2>2. O que a extensão faz</h2>
   <p>
     O Painel Clínico APS é uma ferramenta de apoio à decisão e à produtividade médica. Ela adiciona um
-    painel lateral sobre a tela do SISS de Osasco com calculadoras e escalas clínicas, extração de
-    resultados de exames colados pelo profissional, protocolos de encaminhamento e apoio ao registro da
-    evolução. A extensão só é ativada no domínio oficial do SISS de Osasco
-    (<code>sissamb.osasco.sp.gov.br</code>); em qualquer outro site ela permanece inativa.
+    painel lateral sobre a tela do SISS de Osasco com calculadoras e escalas clínicas, leitura dos
+    resultados de exames que o profissional abriu no prontuário, diretrizes municipais de encaminhamento
+    e pedidos de exames, e apoio ao registro da evolução. A extensão só é ativada no domínio oficial do
+    SISS de Osasco (<code>sissamb.osasco.sp.gov.br</code>) e na tela de resultados do prontuário da
+    Prefeitura (<code>osasco-v5-pep.osasco.sp.gov.br</code>); em qualquer outro site ela permanece inativa.
   </p>
 
   <h2>3. Dados de pacientes: processamento local, sem transmissão</h2>
@@ -108,10 +110,18 @@
       responsável ou a terceiros.
     </p>
   </div>
+  <h3>Leitura de resultados de exames</h3>
   <p>
-    Quando o profissional opta por inserir um texto na conduta, isso é escrito no próprio prontuário
-    SISS (campo de Conduta), sempre <strong>mediante confirmação do profissional</strong>. A extensão
-    não clica, não navega e não grava nada por conta própria.
+    Quando o profissional abre um laudo de exame no prontuário e pede ao painel que o leia, a extensão
+    busca o mesmo arquivo PDF que já está aberto na tela, no endereço do laboratório contratado pela
+    Prefeitura (<code>cientificalab.com.br</code>), e extrai os resultados <strong>no próprio
+    navegador</strong>. O laudo não é guardado nem enviado a nenhum outro lugar. A extensão respeita as
+    regras de sigilo e de auditoria do próprio SISS: só lê o que o profissional já tem permissão para ver.
+  </p>
+  <p>
+    Quando o profissional opta por inserir um texto no prontuário (por exemplo, na Conduta ou na
+    Queixa / História da Doença Atual), isso é escrito no próprio SISS, sempre <strong>por ação do
+    profissional</strong>. A extensão não clica, não navega e não grava nada por conta própria.
   </p>
 
   <h3>Registro de auditoria (local)</h3>
@@ -125,69 +135,108 @@
   <h2>4. Dados de cadastro do profissional (login)</h2>
   <p>
     Para identificar quem utiliza a ferramenta e controlar o acesso, a extensão possui um cadastro/login
-    do profissional. <strong>Estes são os únicos dados que saem da máquina</strong> e são armazenados em
-    um banco de dados sob responsabilidade do responsável. Os dados coletados são:
+    do profissional. Junto com a medição agregada de uso (seção 5), <strong>estes são os únicos dados que
+    saem da máquina</strong>, e são armazenados em um banco de dados sob responsabilidade do responsável.
+    Os dados coletados no cadastro são:
   </p>
   <table>
     <thead><tr><th>Dado</th><th>Finalidade</th><th>Obrigatório</th></tr></thead>
     <tbody>
-      <tr><td>Nome</td><td>Identificação do profissional</td><td>Sim</td></tr>
+      <tr><td>Nome</td><td>Identificação do profissional (vem da relação de médicos da Secretaria, ver abaixo)</td><td>Sim</td></tr>
       <tr><td>E-mail</td><td>Identificação e login</td><td>Sim</td></tr>
       <tr><td>Telefone</td><td>Contato do responsável com o profissional</td><td>Sim</td></tr>
       <tr><td>CRM</td><td>Identificação profissional</td><td>Sim</td></tr>
       <tr><td>Unidade (UBS/UPA)</td><td>Organização do acesso por local</td><td>Sim</td></tr>
       <tr><td>Senha</td><td>Autenticação (armazenada apenas como <em>hash</em>, nunca em texto puro)</td><td>Sim</td></tr>
-      <tr><td>CPF e data de nascimento</td><td>Não coletados por padrão (recursos desativados)</td><td>Não</td></tr>
+      <tr><td>CPF</td><td>Conferir se o profissional pertence à relação de médicos da rede; permitir login pelo CPF</td><td>Sim</td></tr>
+      <tr><td>Data de nascimento</td><td>Apenas conferir, junto com o CPF, a identidade no primeiro acesso. É guardada somente como código irreversível (ver abaixo)</td><td>Sim</td></tr>
     </tbody>
   </table>
   <p>
+    O Cartão Nacional de Saúde (CNS) <strong>não</strong> é coletado.
+  </p>
+  <h3>Relação de médicos autorizados (pré-cadastro)</h3>
+  <p>
+    O acesso é liberado apenas aos médicos da rede municipal. Para isso, o responsável carrega no banco
+    de dados a relação de médicos fornecida pela Secretaria Municipal de Saúde de Osasco, contendo nome,
+    CPF e data de nascimento. Dessa relação, <strong>apenas o nome é guardado em texto</strong>; o CPF e
+    a data de nascimento são guardados somente como <strong>código irreversível</strong> (função de
+    <em>hash</em> criptográfico com chave secreta), suficiente para conferir os dados digitados no
+    primeiro acesso, mas sem permitir recuperá-los. Cada CPF pode ser usado em um único cadastro, e
+    tentativas repetidas com data incorreta bloqueiam o CPF até liberação pelo responsável.
+  </p>
+  <p>
     <strong>Base legal:</strong> o cadastro é realizado com o <strong>consentimento</strong> do
-    profissional no momento do primeiro acesso. O uso desses dados restringe-se a autenticar o
-    profissional e administrar o acesso à ferramenta.
+    profissional no momento do primeiro acesso. A manutenção da relação de médicos autorizados apoia-se no
+    <strong>legítimo interesse</strong> de restringir o acesso a uma ferramenta de uso profissional da
+    rede (art. 7º, IX, da LGPD), com o mínimo de dados e sob a forma irreversível descrita acima. O uso
+    desses dados restringe-se a autenticar o profissional e administrar o acesso à ferramenta.
   </p>
   <p>
     <strong>Não</strong> vendemos, alugamos ou compartilhamos esses dados para fins de publicidade, e
     não os utilizamos para qualquer finalidade diferente das descritas acima.
   </p>
 
-  <h2>5. Onde os dados de cadastro ficam armazenados</h2>
+  <h2>5. Medição agregada de uso</h2>
   <p>
-    Os dados de cadastro são armazenados em banco de dados hospedado na infraestrutura de nuvem da
+    Para melhorar a ferramenta e prestar contas à gestão sobre a sua implantação, a extensão conta
+    quantas vezes cada recurso foi usado (por exemplo: aberturas do painel, telas visitadas, leituras de
+    exames realizadas e exames não reconhecidos). Uma vez por dia, envia apenas esses
+    <strong>contadores</strong>, junto com a unidade de saúde e um número aleatório criado no navegador
+    na primeira utilização.
+  </p>
+  <ul>
+    <li>Esse número aleatório <strong>não tem relação com o cadastro</strong>: não há nome, e-mail, CPF ou
+      identificador da conta na medição. Ele serve apenas para não contar duas vezes o mesmo navegador.</li>
+    <li>Os relatórios <strong>ocultam unidades com menos de 5 profissionais ativos</strong>, para que
+      ninguém seja identificado indiretamente.</li>
+    <li><strong>Nenhum dado de paciente</strong>, valor de exame ou CID entra na medição.</li>
+  </ul>
+  <p>A medição avalia a ferramenta, não o desempenho individual dos profissionais.</p>
+
+  <h2>6. Onde os dados ficam armazenados</h2>
+  <p>
+    Os dados de cadastro, a relação de médicos autorizados e os contadores de uso são armazenados em
+    banco de dados hospedado na infraestrutura de nuvem da
     <strong>Supabase</strong>, que atua como <strong>operador</strong> (processador) por conta do
     responsável. O acesso é protegido por conexão criptografada (HTTPS) e por regras de acesso no
     servidor.
   </p>
   <p>
     Os servidores utilizados estão localizados <strong>no Brasil</strong> (região São Paulo).
-    Não há transferência internacional dos dados de cadastro.
+    Não há transferência internacional desses dados.
   </p>
 
-  <h2>6. Permissões do navegador</h2>
+  <h2>7. Permissões do navegador</h2>
   <p>A extensão solicita apenas o mínimo necessário:</p>
   <ul>
-    <li><strong>Armazenamento</strong> — guardar o registro de auditoria local, a sessão de login e as preferências, na própria máquina.</li>
-    <li><strong>Acesso ao endereço do serviço de cadastro</strong> — permitir o login/cadastro do profissional no banco de dados descrito na seção 5.</li>
-    <li><strong>Execução no domínio do SISS de Osasco</strong> — exibir o painel apenas sobre o prontuário oficial.</li>
+    <li><strong>Armazenamento</strong> — guardar, na própria máquina, a sessão de login, as preferências, o registro de auditoria local e os contadores de uso do dia.</li>
+    <li><strong>Acesso ao endereço do serviço de cadastro</strong> — permitir o login/cadastro do profissional e o envio dos contadores agregados ao banco de dados descrito na seção 6.</li>
+    <li><strong>Acesso ao endereço do laboratório</strong> (<code>cientificalab.com.br</code>) — buscar o laudo que o profissional já abriu no prontuário, para lê-lo no navegador (seção 3).</li>
+    <li><strong>Execução no domínio do SISS e do prontuário da Prefeitura de Osasco</strong> — exibir o painel apenas sobre o prontuário oficial e localizar o laudo aberto na tela.</li>
   </ul>
   <p>A extensão não executa código remoto: todo o código roda a partir do próprio pacote instalado.</p>
 
-  <h2>7. Retenção e exclusão</h2>
+  <h2>8. Retenção e exclusão</h2>
   <p>
     Os dados de cadastro são mantidos enquanto o profissional utilizar a ferramenta. O profissional pode
-    solicitar a exclusão do seu cadastro a qualquer momento (ver seção 9). O registro de auditoria local
+    solicitar a exclusão do seu cadastro a qualquer momento (ver seção 10). O nome e os códigos
+    irreversíveis da relação de médicos autorizados são removidos quando o profissional deixa a rede
+    municipal. Os contadores de uso são agregados e não identificam o profissional. O registro de auditoria local
     é rotativo (mantém apenas os registros mais recentes) e pode ser apagado pelo próprio profissional ao
     limpar os dados da extensão no navegador.
   </p>
 
-  <h2>8. Segurança</h2>
+  <h2>9. Segurança</h2>
   <p>
-    As senhas são armazenadas apenas como <em>hash</em> (não é possível recuperá-las em texto). A
+    As senhas, e o CPF e a data de nascimento da relação de médicos autorizados, são armazenados apenas
+    como <em>hash</em> (não é possível recuperá-los em texto). A
     comunicação com o banco de dados usa HTTPS. O banco aplica regras de controle de acesso por linha.
     Ressalva honesta: o login de uma extensão identifica o profissional e organiza o acesso, mas a
     proteção efetiva do prontuário é garantida pelo próprio login do sistema SISS.
   </p>
 
-  <h2>9. Direitos do titular (LGPD)</h2>
+  <h2>10. Direitos do titular (LGPD)</h2>
   <p>Nos termos do art. 18 da LGPD, o profissional cadastrado pode, a qualquer momento:</p>
   <ul>
     <li>confirmar a existência de tratamento de seus dados;</li>
@@ -197,17 +246,17 @@
   </ul>
   <p>Para exercer esses direitos, entre em contato pelo e-mail <a href="mailto:drrodrigobuzelli@gmail.com">drrodrigobuzelli@gmail.com</a>.</p>
 
-  <h2>10. Cookies e rastreamento</h2>
-  <p>A extensão não usa cookies de rastreamento, não faz perfilamento e não integra ferramentas de análise ou publicidade de terceiros.</p>
+  <h2>11. Cookies e rastreamento</h2>
+  <p>A extensão não usa cookies de rastreamento, não faz perfilamento e não integra ferramentas de análise ou publicidade de terceiros. A única medição existente é a contagem agregada e própria descrita na seção 5.</p>
 
-  <h2>11. Público</h2>
-  <p>A ferramenta destina-se ao uso profissional por médicos e equipes da Atenção Primária. Não se destina a menores nem coleta dados de crianças ou adolescentes.</p>
+  <h2>12. Público</h2>
+  <p>A ferramenta destina-se ao uso profissional por médicos da Atenção Primária de Osasco. Não se destina a menores nem coleta dados de crianças ou adolescentes.</p>
 
-  <h2>12. Alterações nesta política</h2>
+  <h2>13. Alterações nesta política</h2>
   <p>Esta política pode ser atualizada. A data no topo indica a última revisão. Alterações relevantes serão comunicadas aos profissionais cadastrados.</p>
 
   <footer>
-    Painel Clínico APS — Osasco · Ferramenta institucional de apoio à Atenção Primária.<br>
+    Painel Clínico APS — Osasco · Equipe R³ · Ferramenta de apoio à Atenção Primária.<br>
     Responsável: Dr. Rodrigo Buzelli Moreira · CREMESP 151783 · Contato: <a href="mailto:drrodrigobuzelli@gmail.com">drrodrigobuzelli@gmail.com</a>
   </footer>
 
